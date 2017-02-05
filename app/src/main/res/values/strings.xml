@@ -3,4 +3,6 @@
 
     <!-- Put here the TMDB API key and uncomment the line -->
     <!-- <string name="api_key"></string> -->
+
+    <string name="action_toggle_sort">Toggle sort</string>
 </resources>

@@ -1,11 +1,14 @@
 package com.agoconcept.udacity.popularmovies;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -27,38 +30,47 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<PopularMovie> mMoviesList;
 
-    private static final int GRID_NUMBER_OF_COLUMNS = 2;
+    private boolean sortByPopularity = true;
+
+    private static final int GRID_NUMBER_OF_COLUMNS_PORTRAIT = 2;
+    private static final int GRID_NUMBER_OF_COLUMNS_LANDSCAPE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up grid layout
+        // Set up grid layout (2 columns in portrait mode; 3 columns in landscape mode)
         mMainLayoutRecyclerView = (RecyclerView) findViewById(R.id.rv_main_layout);
-        mGridLayoutManager = new GridLayoutManager(this, GRID_NUMBER_OF_COLUMNS);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mGridLayoutManager = new GridLayoutManager(this, GRID_NUMBER_OF_COLUMNS_LANDSCAPE);
+        } else {
+            mGridLayoutManager = new GridLayoutManager(this, GRID_NUMBER_OF_COLUMNS_PORTRAIT);
+        }
         mMainLayoutRecyclerView.setLayoutManager(mGridLayoutManager);
-
-        mMoviesList = new ArrayList<>();
-
-        mMovieAdapter = new MovieAdapter(mMoviesList);
-        mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
-        if (mMoviesList.size() == 0) {
-            fetchMovies();
-        }
+        fetchMovies();
     }
 
     private void fetchMovies() {
-        // TODO: Retrieve list using the API (pending to select which sorting method should be used)
-        URL url = NetworkUtils.buildPopularMoviesQuery(this);
+        mMoviesList = new ArrayList<>();
+
+        mMovieAdapter = new MovieAdapter(mMoviesList);
+        mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
+
+        URL url;
+        if (sortByPopularity)
+            url = NetworkUtils.buildPopularMoviesQuery(this);
+        else
+            url = NetworkUtils.buildTopRatedMoviesQuery(this);
+
         new TMDBQueryTask().execute(url);
     }
 
@@ -103,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
                         mMoviesList.add(movie);
                     }
+
+                    mMovieAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Toast.makeText(MainActivity.this, "TODO: Error", Toast.LENGTH_SHORT).show();
                 }
@@ -112,10 +126,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-    // TODO: Retrieve list of movies
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.action_toggle_sort:
+                sortByPopularity = !sortByPopularity;
+                fetchMovies();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     // TODO: Sort them properly (most popular / highest rated) via menu item
     // TODO: Click to move to another screen with the following info: original title, movie poster image thumbnail, A plot synopsis (called overview in the api), user rating (called vote_average in the api), release date
     // TODO: Add "powered by TMDB" logo (https://www.themoviedb.org/about/logos-attribution)
+    // TODO: Review TODOs
+    // TODO: Extract strings
+    // TODO: Review warnings
 }
