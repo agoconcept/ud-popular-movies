@@ -1,13 +1,13 @@
 package com.agoconcept.udacity.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +46,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private PopularMovie mMovie;
+
         private ImageView mCoverImageView;
         private TextView mTitleTextView;
 
@@ -61,10 +63,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         @Override
         public void onClick(View view) {
             // TODO
-            Toast.makeText(view.getContext(), "Movie clicked!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(view.getContext(), MovieActivity.class);
+
+            intent.putExtra("title", mMovie.getTitle());
+            intent.putExtra("cover", mMovie.getCoverUri().toString());
+            intent.putExtra("overview", mMovie.getOverview());
+            intent.putExtra("user_rating", mMovie.getRating());
+            intent.putExtra("release_date", mMovie.getReleaseDate());
+
+            // TODO: Start activity
         }
 
         public void bindMovie(PopularMovie movie) {
+            mMovie = movie;
+
             mTitleTextView.setText(movie.getTitle());
 
             Picasso.with(mCoverImageView.getContext())

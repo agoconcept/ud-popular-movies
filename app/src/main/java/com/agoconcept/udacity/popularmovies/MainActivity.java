@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         mMovieAdapter = new MovieAdapter(mMoviesList);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
 
-        mSortedByTextView = (TextView) findViewById(R.id.tv_sorted_by);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mSortedByTextView = (TextView) findViewById(R.id.tv_main_sorted_by);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_main_loading_indicator);
 
         fetchMovies();
     }
