@@ -1,7 +1,6 @@
 package com.agoconcept.udacity.popularmovies;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     private ArrayList<PopularMovie> mMovies;
 
-    public MovieAdapter(ArrayList<PopularMovie> movies) {
+    final private ListItemClickListener mOnClickListener;
+
+    // Interface to handle clicking on items
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
+
+    public MovieAdapter(ArrayList<PopularMovie> movies, ListItemClickListener listener) {
         mMovies = movies;
+        mOnClickListener = listener;
     }
 
     @Override
@@ -54,24 +61,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         public MovieViewHolder(View itemView) {
             super(itemView);
 
-            mCoverImageView = (ImageView) itemView.findViewById(R.id.iv_movie_cover);
-            mTitleTextView = (TextView) itemView.findViewById(R.id.tv_movie_title);
+            mCoverImageView = (ImageView) itemView.findViewById(R.id.iv_item_movie_cover);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.tv_item_movie_title);
 
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            // TODO
-            Intent intent = new Intent(view.getContext(), MovieActivity.class);
-
-            intent.putExtra("title", mMovie.getTitle());
-            intent.putExtra("cover", mMovie.getCoverUri().toString());
-            intent.putExtra("overview", mMovie.getOverview());
-            intent.putExtra("user_rating", mMovie.getRating());
-            intent.putExtra("release_date", mMovie.getReleaseDate());
-
-            // TODO: Start activity
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickedPosition);
         }
 
         public void bindMovie(PopularMovie movie) {

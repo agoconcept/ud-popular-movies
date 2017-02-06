@@ -1,5 +1,6 @@
 package com.agoconcept.udacity.popularmovies;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener {
 
     private RecyclerView mMainLayoutRecyclerView;
     private GridLayoutManager mGridLayoutManager;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         mMoviesList = new ArrayList<>();
 
-        mMovieAdapter = new MovieAdapter(mMoviesList);
+        mMovieAdapter = new MovieAdapter(mMoviesList, this);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
 
         mSortedByTextView = (TextView) findViewById(R.id.tv_main_sorted_by);
@@ -76,6 +77,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         new TMDBQueryTask().execute(url);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        PopularMovie movie = mMoviesList.get(clickedItemIndex);
+
+        Intent intent = new Intent(MainActivity.this, MovieActivity.class);
+
+        intent.putExtra("title", movie.getTitle());
+        intent.putExtra("cover", movie.getCoverUri().toString());
+        intent.putExtra("overview", movie.getOverview());
+        intent.putExtra("user_rating", movie.getRating());
+        intent.putExtra("release_date", movie.getReleaseDate());
+
+        startActivity(intent);
     }
 
     public class TMDBQueryTask extends AsyncTask<URL, Void, String> {

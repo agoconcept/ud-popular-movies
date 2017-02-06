@@ -21,8 +21,8 @@ public class MovieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        mCoverImageView = (ImageView) findViewById(R.id.iv_movie_cover);
-        mTitleTextView = (TextView) findViewById(R.id.tv_movie_title);
+        mCoverImageView = (ImageView) findViewById(R.id.iv_item_movie_cover);
+        mTitleTextView = (TextView) findViewById(R.id.tv_movie_original_title);
         mOverviewTextView = (TextView) findViewById(R.id.tv_movie_overview);
         mUserRatingTextView = (TextView) findViewById(R.id.tv_movie_user_rating);
         mReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_release_date);

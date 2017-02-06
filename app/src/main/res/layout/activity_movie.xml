@@ -13,7 +13,7 @@
     tools:context="com.agoconcept.udacity.popularmovies.MovieActivity">
 
     <ImageView
-        android:id="@+id/iv_movie_cover"
+        android:id="@+id/iv_item_movie_cover"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
