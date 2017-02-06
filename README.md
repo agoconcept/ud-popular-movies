@@ -1,4 +1,4 @@
-Popular Movies project for Udacity's Associate Android Developer Fast Track
+# Popular Movies project for Udacity's Associate Android Developer Fast Track
 
 For accessing TMDB please put a valid API key under app/src/main/res/strings.xml in "api_key", e.g:
 
