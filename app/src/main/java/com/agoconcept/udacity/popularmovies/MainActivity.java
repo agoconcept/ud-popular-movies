@@ -167,8 +167,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO: Click to move to another screen with the following info: original title, movie poster image thumbnail, A plot synopsis (called overview in the api), user rating (called vote_average in the api), release date
-    // TODO: Add "powered by TMDB" logo (https://www.themoviedb.org/about/logos-attribution)
     // TODO: Review TODOs
     // TODO: Extract strings
     // TODO: Review warnings
