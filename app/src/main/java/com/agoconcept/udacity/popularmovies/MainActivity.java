@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -26,11 +27,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mMainLayoutRecyclerView;
     private GridLayoutManager mGridLayoutManager;
     private MovieAdapter mMovieAdapter;
+    private TextView mSortedByTextView;
     private ProgressBar mLoadingIndicator;
 
     private ArrayList<PopularMovie> mMoviesList;
 
-    private boolean sortByPopularity = true;
+    private boolean mSortByPopularity = true;
 
     private static final int GRID_NUMBER_OF_COLUMNS_PORTRAIT = 2;
     private static final int GRID_NUMBER_OF_COLUMNS_LANDSCAPE = 3;
@@ -49,27 +51,29 @@ public class MainActivity extends AppCompatActivity {
         }
         mMainLayoutRecyclerView.setLayoutManager(mGridLayoutManager);
 
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        fetchMovies();
-    }
-
-    private void fetchMovies() {
         mMoviesList = new ArrayList<>();
 
         mMovieAdapter = new MovieAdapter(mMoviesList);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
 
+        mSortedByTextView = (TextView) findViewById(R.id.tv_sorted_by);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+
+        fetchMovies();
+    }
+
+    private void fetchMovies() {
+        mMoviesList.clear();
+
         URL url;
-        if (sortByPopularity)
+        if (mSortByPopularity) {
+            mSortedByTextView.setText("Sorted by: Popularity");
             url = NetworkUtils.buildPopularMoviesQuery(this);
-        else
+        }
+        else {
+            mSortedByTextView.setText("Sorted by: Top-Rated");
             url = NetworkUtils.buildTopRatedMoviesQuery(this);
+        }
 
         new TMDBQueryTask().execute(url);
     }
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.action_toggle_sort:
-                sortByPopularity = !sortByPopularity;
+                mSortByPopularity = !mSortByPopularity;
                 fetchMovies();
                 return true;
         }
@@ -147,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO: Sort them properly (most popular / highest rated) via menu item
     // TODO: Click to move to another screen with the following info: original title, movie poster image thumbnail, A plot synopsis (called overview in the api), user rating (called vote_average in the api), release date
     // TODO: Add "powered by TMDB" logo (https://www.themoviedb.org/about/logos-attribution)
     // TODO: Review TODOs
