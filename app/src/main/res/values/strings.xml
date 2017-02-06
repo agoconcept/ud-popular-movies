@@ -2,7 +2,7 @@
     <string name="app_name">Popular Movies</string>
 
     <!-- Put here the TMDB API key and uncomment the line -->
-    <!-- <string name="api_key"></string> -->
+    <!-- <string name="api_key">PUT_YOUR_TMDB_API_KEY_HERE</string> -->
 
     <string name="action_toggle_sort">Toggle sort</string>
 
