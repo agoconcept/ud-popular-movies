@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     }
 
     private void fetchMovies() {
-        mMoviesList.clear();
-
         URL url;
         if (mSortByPopularity) {
             mSortedByTextView.setText(getString(R.string.sorted_by_popularity));
@@ -81,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+        // Check that item exists
+        if (clickedItemIndex >= mMoviesList.size()) {
+            Toast.makeText(this, getString(R.string.movie_not_found), Toast.LENGTH_SHORT).show();
+        }
+
         PopularMovie movie = mMoviesList.get(clickedItemIndex);
 
         Intent intent = new Intent(MainActivity.this, MovieActivity.class);
@@ -121,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                     JSONObject jsonResults = new JSONObject(tmdbSearchResults);
 
                     JSONArray movieResults = jsonResults.getJSONArray("results");
+
+                    mMoviesList.clear();
 
                     for (int i = 0; i < movieResults.length(); i++) {
                         JSONObject movieResult = movieResults.getJSONObject(i);
