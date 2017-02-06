@@ -138,10 +138,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
                     mMovieAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
-                    Toast.makeText(MainActivity.this, "TODO: Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Invalid response from server", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainActivity.this, "TODO: Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Unable to get response from server. Are you connected to the Internet?", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -167,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO: Review TODOs
     // TODO: Extract strings
     // TODO: Review warnings
 }
