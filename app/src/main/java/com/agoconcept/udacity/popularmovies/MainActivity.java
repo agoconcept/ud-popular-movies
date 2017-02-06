@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         URL url;
         if (mSortByPopularity) {
-            mSortedByTextView.setText("Sorted by: Popularity");
+            mSortedByTextView.setText(getString(R.string.sorted_by_popularity));
             url = NetworkUtils.buildPopularMoviesQuery(this);
         }
         else {
-            mSortedByTextView.setText("Sorted by: Top-Rated");
+            mSortedByTextView.setText(getString(R.string.sorted_by_top_rated));
             url = NetworkUtils.buildTopRatedMoviesQuery(this);
         }
 
@@ -166,7 +166,4 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         return super.onOptionsItemSelected(item);
     }
-
-    // TODO: Extract strings
-    // TODO: Review warnings
 }

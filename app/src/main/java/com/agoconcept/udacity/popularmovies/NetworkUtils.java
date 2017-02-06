@@ -47,7 +47,7 @@ public class NetworkUtils {
         return url;
     }
 
-    public static final String getTmdbPosterBaseUrl() { return TMDB_POSTER_BASE_URL; }
+    public static String getTmdbPosterBaseUrl() { return TMDB_POSTER_BASE_URL; }
 
     /**
      * This method returns the entire result from the HTTP response.

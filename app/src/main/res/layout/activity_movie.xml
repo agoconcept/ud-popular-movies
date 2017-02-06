@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="Movie cover" />
+            android:contentDescription="@string/movie_cover" />
 
         <TextView
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_gravity="start"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Original title: " />
+            android:text="@string/original_title" />
 
         <TextView
             android:id="@+id/tv_movie_original_title"
@@ -45,7 +45,7 @@
             android:layout_gravity="start"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Overview: " />
+            android:text="@string/overview" />
 
         <TextView
             android:id="@+id/tv_movie_overview"
@@ -62,7 +62,7 @@
             android:layout_gravity="start"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="User rating: " />
+            android:text="@string/user_rating" />
 
         <TextView
             android:id="@+id/tv_movie_user_rating"
@@ -79,7 +79,7 @@
             android:layout_gravity="start"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Release date: " />
+            android:text="@string/release_date" />
 
         <TextView
             android:id="@+id/tv_movie_release_date"
