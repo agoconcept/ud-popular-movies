@@ -53,8 +53,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private PopularMovie mMovie;
-
         private ImageView mCoverImageView;
         private TextView mTitleTextView;
 
@@ -74,8 +72,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         }
 
         public void bindMovie(PopularMovie movie) {
-            mMovie = movie;
-
             mTitleTextView.setText(movie.getTitle());
 
             Picasso.with(mCoverImageView.getContext())
