@@ -23,13 +23,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener {
 
     private RecyclerView mMainLayoutRecyclerView;
     private GridLayoutManager mGridLayoutManager;
     private MovieAdapter mMovieAdapter;
-    private TextView mSortedByTextView;
-    private ProgressBar mLoadingIndicator;
+
+    @BindView (R.id.tv_main_sorted_by) TextView mSortedByTextView;
+    @BindView (R.id.pb_main_loading_indicator) ProgressBar mLoadingIndicator;
 
     private ArrayList<PopularMovie> mMoviesList;
 
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         // Set up grid layout (2 columns in portrait mode; 3 columns in landscape mode)
         mMainLayoutRecyclerView = (RecyclerView) findViewById(R.id.rv_main_layout);
@@ -56,9 +61,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         mMovieAdapter = new MovieAdapter(mMoviesList, this);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
-
-        mSortedByTextView = (TextView) findViewById(R.id.tv_main_sorted_by);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_main_loading_indicator);
 
         fetchMovies();
     }

@@ -8,24 +8,22 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieActivity extends AppCompatActivity {
 
-    private ImageView mCoverImageView;
-    private TextView mTitleTextView;
-    private TextView mOverviewTextView;
-    private TextView mUserRatingTextView;
-    private TextView mReleaseDateTextView;
+    @BindView (R.id.iv_item_movie_cover) ImageView mCoverImageView;
+    @BindView (R.id.tv_movie_original_title) TextView mTitleTextView;
+    @BindView (R.id.tv_movie_overview) TextView mOverviewTextView;
+    @BindView (R.id.tv_movie_user_rating) TextView mUserRatingTextView;
+    @BindView (R.id.tv_movie_release_date) TextView mReleaseDateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
-
-        mCoverImageView = (ImageView) findViewById(R.id.iv_item_movie_cover);
-        mTitleTextView = (TextView) findViewById(R.id.tv_movie_original_title);
-        mOverviewTextView = (TextView) findViewById(R.id.tv_movie_overview);
-        mUserRatingTextView = (TextView) findViewById(R.id.tv_movie_user_rating);
-        mReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_release_date);
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
 
