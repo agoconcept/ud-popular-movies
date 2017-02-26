@@ -28,12 +28,13 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener {
 
-    private RecyclerView mMainLayoutRecyclerView;
-    private GridLayoutManager mGridLayoutManager;
-    private MovieAdapter mMovieAdapter;
-
     @BindView (R.id.tv_main_sorted_by) TextView mSortedByTextView;
     @BindView (R.id.pb_main_loading_indicator) ProgressBar mLoadingIndicator;
+
+    @BindView (R.id.rv_main_layout) RecyclerView mMainLayoutRecyclerView;
+
+    private GridLayoutManager mGridLayoutManager;
+    private MovieAdapter mMovieAdapter;
 
     private ArrayList<PopularMovie> mMoviesList;
 
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         ButterKnife.bind(this);
 
         // Set up grid layout (2 columns in portrait mode; 3 columns in landscape mode)
-        mMainLayoutRecyclerView = (RecyclerView) findViewById(R.id.rv_main_layout);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             mGridLayoutManager = new GridLayoutManager(this, GRID_NUMBER_OF_COLUMNS_LANDSCAPE);
         } else {
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         // Check that item exists
         if (clickedItemIndex >= mMoviesList.size()) {
             Toast.makeText(this, getString(R.string.movie_not_found), Toast.LENGTH_SHORT).show();
+            return;
         }
 
         PopularMovie movie = mMoviesList.get(clickedItemIndex);
