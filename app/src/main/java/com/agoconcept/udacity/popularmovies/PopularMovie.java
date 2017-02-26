@@ -1,8 +1,10 @@
 package com.agoconcept.udacity.popularmovies;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class PopularMovie {
+public class PopularMovie implements Parcelable {
 
     private String mTitle;
     private Uri mCoverUri;
@@ -18,6 +20,26 @@ public class PopularMovie {
         mReleaseDate = releaseDate;
     }
 
+    protected PopularMovie(Parcel in) {
+        mTitle = in.readString();
+        mCoverUri = in.readParcelable(Uri.class.getClassLoader());
+        mOverview = in.readString();
+        mRating = in.readDouble();
+        mReleaseDate = in.readString();
+    }
+
+    public static final Creator<PopularMovie> CREATOR = new Creator<PopularMovie>() {
+        @Override
+        public PopularMovie createFromParcel(Parcel in) {
+            return new PopularMovie(in);
+        }
+
+        @Override
+        public PopularMovie[] newArray(int size) {
+            return new PopularMovie[size];
+        }
+    };
+
     public String getTitle() {
         return mTitle;
     }
@@ -31,4 +53,18 @@ public class PopularMovie {
     public Double getRating() { return mRating; }
 
     public String getReleaseDate() { return mReleaseDate; }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mTitle);
+        parcel.writeParcelable(mCoverUri, i);
+        parcel.writeString(mOverview);
+        parcel.writeDouble(mRating);
+        parcel.writeString(mReleaseDate);
+    }
 }
