@@ -12,8 +12,11 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
+    // One of "w92", "w154", "w185", "w342", "w500", "w780", or "original"
+    private static final String TMDB_POSTER_QUALITY = "w500";
+
     private static final String TMDB_BASE_URL = "http://api.themoviedb.org/3/movie";
-    private static final String TMDB_POSTER_BASE_URL = "http://image.tmdb.org/t/p/w342/";
+    private static final String TMDB_POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
 
     private static final String TMDB_POPULAR_MOVIES_PATH = "/popular";
     private static final String TMDB_TOP_RATED_MOVIES_PATH = "/top_rated";
@@ -47,7 +50,7 @@ public class NetworkUtils {
         return url;
     }
 
-    public static String getTmdbPosterBaseUrl() { return TMDB_POSTER_BASE_URL; }
+    public static String getTmdbPosterBaseUrl() { return TMDB_POSTER_BASE_URL + TMDB_POSTER_QUALITY; }
 
     /**
      * This method returns the entire result from the HTTP response.
