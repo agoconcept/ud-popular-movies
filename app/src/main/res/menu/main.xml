@@ -4,9 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_toggle_sort"
+        android:id="@+id/action_sort_popularity"
         android:orderInCategory="1"
-        android:title="@string/action_toggle_sort"
+        android:title="@string/action_sort_popularity"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_sort_best_rated"
+        android:orderInCategory="2"
+        android:title="@string/action_sort_best_rated"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_show_favorites"
+        android:orderInCategory="3"
+        android:title="@string/action_show_favorites"
         app:showAsAction="never"/>
 
 </menu>

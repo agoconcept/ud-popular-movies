@@ -4,10 +4,9 @@
     <!-- Put here the TMDB API key and uncomment the line -->
     <!-- <string name="api_key">PUT_YOUR_TMDB_API_KEY_HERE</string> -->
 
-    <string name="action_toggle_sort">Toggle sort</string>
-
-    <string name="sorted_by_popularity">Sorted by: Popularity</string>
-    <string name="sorted_by_top_rated">Sorted by: Top-Rated</string>
+    <string name="action_sort_popularity">Sort by popularity</string>
+    <string name="action_sort_best_rated">Sort by best rated</string>
+    <string name="action_show_favorites">Show favorites</string>
 
     <string name="movie_cover">Movie cover</string>
     <string name="original_title">Original title: </string>
@@ -15,5 +14,8 @@
     <string name="user_rating">User rating: </string>
     <string name="release_date">Release date: </string>
 
+    <!-- ERRORS -->
     <string name="movie_not_found">Movie not found</string>
+    <string name="invalid_response">Invalid response from server</string>
+    <string name="no_response">Unable to get response from server. Are you connected to the Internet?</string>
 </resources>

@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -143,10 +142,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
                     mMovieAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
-                    Toast.makeText(MainActivity.this, "Invalid response from server", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.invalid_response), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(MainActivity.this, "Unable to get response from server. Are you connected to the Internet?", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.no_response), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -163,9 +162,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.action_toggle_sort:
-                mSortByPopularity = !mSortByPopularity;
+            case R.id.action_sort_popularity:
+                mSortByPopularity = true;
                 fetchMovies();
+                return true;
+
+            case R.id.action_sort_best_rated:
+                mSortByPopularity = false;
+                fetchMovies();
+                return true;
+
+            case R.id.action_show_favorites:
+                Toast.makeText(MainActivity.this, "TODO: Favorites not implemented yet", Toast.LENGTH_SHORT).show();
                 return true;
         }
 
