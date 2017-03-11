@@ -9,16 +9,10 @@
     <ImageView
         android:id="@+id/iv_item_movie_cover"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:scaleType="fitXY"
-        android:contentDescription="@string/movie_cover" />
-
-    <TextView
-        android:id="@+id/tv_item_movie_title"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal" />
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/movie_cover" />
 
 </LinearLayout>

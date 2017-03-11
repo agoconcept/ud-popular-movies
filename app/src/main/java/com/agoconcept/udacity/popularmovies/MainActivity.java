@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ListItemClickListener {
 
-    @BindView (R.id.tv_main_sorted_by) TextView mSortedByTextView;
     @BindView (R.id.pb_main_loading_indicator) ProgressBar mLoadingIndicator;
 
     @BindView (R.id.rv_main_layout) RecyclerView mMainLayoutRecyclerView;
@@ -68,11 +67,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private void fetchMovies() {
         URL url;
         if (mSortByPopularity) {
-            mSortedByTextView.setText(getString(R.string.sorted_by_popularity));
             url = NetworkUtils.buildPopularMoviesQuery(this);
         }
         else {
-            mSortedByTextView.setText(getString(R.string.sorted_by_top_rated));
             url = NetworkUtils.buildTopRatedMoviesQuery(this);
         }
 
