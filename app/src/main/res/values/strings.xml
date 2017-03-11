@@ -9,7 +9,6 @@
     <string name="action_show_favorites">Show favorites</string>
 
     <string name="movie_cover">Movie cover</string>
-    <string name="original_title">Original title: </string>
     <string name="overview">Overview: </string>
     <string name="user_rating">User rating: </string>
     <string name="release_date">Release date: </string>
