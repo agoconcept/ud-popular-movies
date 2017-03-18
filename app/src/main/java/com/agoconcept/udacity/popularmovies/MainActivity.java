@@ -83,15 +83,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
             return;
         }
 
-        PopularMovie movie = mMoviesList.get(clickedItemIndex);
-
         Intent intent = new Intent(MainActivity.this, MovieActivity.class);
 
-        intent.putExtra("title", movie.getTitle());
-        intent.putExtra("cover", movie.getCoverUri().toString());
-        intent.putExtra("overview", movie.getOverview());
-        intent.putExtra("user_rating", movie.getRating());
-        intent.putExtra("release_date", movie.getReleaseDate());
+        PopularMovie movie = mMoviesList.get(clickedItemIndex);
+
+        intent.putExtra("movie", movie);
 
         startActivity(intent);
     }
@@ -129,13 +125,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                     for (int i = 0; i < movieResults.length(); i++) {
                         JSONObject movieResult = movieResults.getJSONObject(i);
 
-                        String originalTitle = movieResult.getString("original_title");
+                        String id = movieResult.getString("id");
+
+                        String title = movieResult.getString("title");
                         String posterPath = NetworkUtils.getTmdbPosterBaseUrl() + movieResult.getString("poster_path");
+                        String backdropPath = NetworkUtils.getTmdbPosterBaseUrl() + movieResult.getString("backdrop_path");
                         String overview = movieResult.getString("overview");
-                        Double rating = movieResult.getDouble("vote_average");
+                        double rating = movieResult.getDouble("vote_average");
+                        int voteCount = movieResult.getInt("vote_count");
                         String releaseDate = movieResult.getString("release_date");
 
-                        PopularMovie movie = new PopularMovie(originalTitle, Uri.parse(posterPath), overview, rating, releaseDate);
+                        PopularMovie movie = new PopularMovie(
+                                id,
+                                title,
+                                Uri.parse(posterPath),
+                                Uri.parse(backdropPath),
+                                overview,
+                                rating,
+                                voteCount,
+                                releaseDate);
 
                         mMoviesList.add(movie);
                     }

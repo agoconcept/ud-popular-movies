@@ -9,12 +9,18 @@
     <string name="action_show_favorites">Show favorites</string>
 
     <string name="movie_cover">Movie cover</string>
-    <string name="overview">Overview: </string>
-    <string name="user_rating">User rating: </string>
-    <string name="release_date">Release date: </string>
+    <string name="release_date">Release date</string>
+    <string name="user_rating">User rating</string>
+    <string name="overview">Overview</string>
+    <string name="trailer">Trailer</string>
+    <string name="trailers">Trailers</string>
+    <string name="review">Review</string>
 
     <!-- ERRORS -->
     <string name="movie_not_found">Movie not found</string>
+    <string name="trailer_not_found">Trailer not found</string>
     <string name="invalid_response">Invalid response from server</string>
     <string name="no_response">Unable to get response from server. Are you connected to the Internet?</string>
+    <string name="no_app_for_video_intent">Unable to find any app to play the video</string>
+
 </resources>

@@ -21,7 +21,16 @@ public class NetworkUtils {
     private static final String TMDB_POPULAR_MOVIES_PATH = "/popular";
     private static final String TMDB_TOP_RATED_MOVIES_PATH = "/top_rated";
 
+    private static final String TMDB_MOVIE_TRAILERS_PATH = "/videos";
+    private static final String TMDB_MOVIE_REVIEWS_PATH = "/reviews";
+
     private static final String TMDB_API_KEY_PARAM = "api_key";
+
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
+
+    private static final String YOUTUBE_VIDEO_THUMBNAIL_PREFIX_URL = "http://img.youtube.com/vi/";
+    private static final String YOUTUBE_VIDEO_THUMBNAIL_SUFFIX_URL = "/hqdefault.jpg";
+
 
     public static URL buildPopularMoviesQuery(Context context) {
         String baseUrl = TMDB_BASE_URL + TMDB_POPULAR_MOVIES_PATH;
@@ -30,6 +39,16 @@ public class NetworkUtils {
 
     public static URL buildTopRatedMoviesQuery(Context context) {
         String baseUrl = TMDB_BASE_URL + TMDB_TOP_RATED_MOVIES_PATH;
+        return buildQuery(baseUrl, context);
+    }
+
+    public static URL buildMovieTrailersQuery(String movieId, Context context) {
+        String baseUrl = TMDB_BASE_URL + "/" + movieId + TMDB_MOVIE_TRAILERS_PATH;
+        return buildQuery(baseUrl, context);
+    }
+
+    public static URL buildMovieReviewsQuery(String movieId, Context context) {
+        String baseUrl = TMDB_BASE_URL + "/" + movieId + TMDB_MOVIE_REVIEWS_PATH;
         return buildQuery(baseUrl, context);
     }
 
@@ -76,5 +95,14 @@ public class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public static Uri buildYouTubeVideoUri(String movieId) {
+        String url = YOUTUBE_BASE_URL + movieId;
+        return Uri.parse(url);
+    }
+
+    public static String buildYouTubeVideoThumbnailUrl(String movieId) {
+        return YOUTUBE_VIDEO_THUMBNAIL_PREFIX_URL + movieId + YOUTUBE_VIDEO_THUMBNAIL_SUFFIX_URL;
     }
 }
