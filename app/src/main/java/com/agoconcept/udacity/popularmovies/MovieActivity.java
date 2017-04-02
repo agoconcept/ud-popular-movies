@@ -1,8 +1,10 @@
 package com.agoconcept.udacity.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -55,6 +59,10 @@ public class MovieActivity
 
     private PopularMovie mMovie;
 
+    private SQLiteDatabase mDb;
+
+    private Menu mMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +71,10 @@ public class MovieActivity
 
         // This is to enable scrolling for long titles
         mTitleTextView.setMovementMethod(new ScrollingMovementMethod());
+
+        // Set SQLite DB
+        MovieDBHelper dbHelper = new MovieDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
 
         Intent intent = getIntent();
 
@@ -87,8 +99,12 @@ public class MovieActivity
             mUserRatingTextView.setText(rating);
 
             // Extract the year
-            String year = mMovie.getReleaseDate().substring(0, 4);
-            mReleaseDateTextView.setText(year);
+            if (mMovie.getReleaseDate().length() >= 4) {
+                String year = mMovie.getReleaseDate().substring(0, 4);
+                mReleaseDateTextView.setText(year);
+            } else {
+                mReleaseDateTextView.setText("-");
+            }
         }
 
         mTrailersLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -247,5 +263,75 @@ public class MovieActivity
                 Toast.makeText(MovieActivity.this, getString(R.string.no_response), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.mMenu = menu;
+        getMenuInflater().inflate(R.menu.movie, menu);
+        setFavoriteIcon();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.action_toggle_favorite:
+
+                // Toggle icon
+                mMovie.setIsFavorite(!mMovie.getIsFavorite());
+                setFavoriteIcon();
+
+                // Update movie in SQLite
+                if (mMovie.getIsFavorite())
+                    addToFavoriteMovies();
+                else
+                    removeFromFavoriteMovies();
+
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private long addToFavoriteMovies() {
+        ContentValues cv = new ContentValues();
+
+        cv.put(MovieContract.MovieEntry.COLUMN_TMDB_ID, mMovie.getId());
+
+        cv.put(MovieContract.MovieEntry.COLUMN_TITLE, mMovie.getTitle());
+        cv.put(MovieContract.MovieEntry.COLUMN_COVER_URI, mMovie.getCoverUri().toString());
+        cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+        cv.put(MovieContract.MovieEntry.COLUMN_RATING, mMovie.getRating());
+        cv.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, mMovie.getVoteCount());
+        cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
+
+        long rowId = mDb.insert(MovieContract.MovieEntry.TABLE_NAME, null, cv);
+
+        if (rowId != -1)
+            Toast.makeText(MovieActivity.this, getString(R.string.movie_saved_as_favorite), Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(MovieActivity.this, getString(R.string.movie_error_saving_favorite), Toast.LENGTH_SHORT).show();
+
+        return rowId;
+    }
+
+    private void removeFromFavoriteMovies() {
+        int rowsDeleted = mDb.delete(MovieContract.MovieEntry.TABLE_NAME, MovieContract.MovieEntry.COLUMN_TMDB_ID + "=" + mMovie.getId(), null);
+
+        if (rowsDeleted > 0)
+            Toast.makeText(MovieActivity.this, getString(R.string.movie_deleted_as_favorite), Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(MovieActivity.this, getString(R.string.movie_error_deleting_favorite), Toast.LENGTH_SHORT).show();
+    }
+
+    private void setFavoriteIcon() {
+        if (mMovie.getIsFavorite())
+            mMenu.getItem(0).setIcon(getResources().getDrawable(R.drawable.heart));
+        else
+            mMenu.getItem(0).setIcon(getResources().getDrawable(R.drawable.heart_outline));
     }
 }

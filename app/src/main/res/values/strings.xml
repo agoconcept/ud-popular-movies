@@ -7,6 +7,7 @@
     <string name="action_sort_popularity">Sort by popularity</string>
     <string name="action_sort_best_rated">Sort by best rated</string>
     <string name="action_show_favorites">Show favorites</string>
+    <string name="action_toggle_favorite">Toggle favorite</string>
 
     <string name="movie_cover">Movie cover</string>
     <string name="release_date">Release date</string>
@@ -15,6 +16,11 @@
     <string name="trailer">Trailer</string>
     <string name="trailers">Trailers</string>
     <string name="review">Review</string>
+
+    <string name="movie_saved_as_favorite">Movie saved as favorite</string>
+    <string name="movie_error_saving_favorite">Error when saving movie as favorite</string>
+    <string name="movie_deleted_as_favorite">Movie deleted as favorite</string>
+    <string name="movie_error_deleting_favorite">Error when deleting movie as favorite</string>
 
     <!-- ERRORS -->
     <string name="movie_not_found">Movie not found</string>

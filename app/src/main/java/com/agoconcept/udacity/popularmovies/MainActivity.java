@@ -1,9 +1,13 @@
 package com.agoconcept.udacity.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -36,7 +40,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     private ArrayList<PopularMovie> mMoviesList;
 
-    private boolean mSortByPopularity = true;
+    private SQLiteDatabase mDb;
+
+    static final String STATE_SORT_CRITERIA = "SORT_CRITERIA";
+
+    //  Not using an enum to facilitate storing it in a SharedPreferences
+    static final int SORT_POPULARITY = 0;
+    static final int SORT_BEST_RATED = 1;
+    static final int SORT_FAVORITES = 2;
+    private int mSortCriteria = SORT_POPULARITY;
 
     private static final int GRID_NUMBER_OF_COLUMNS_PORTRAIT = 2;
     private static final int GRID_NUMBER_OF_COLUMNS_LANDSCAPE = 3;
@@ -60,19 +72,41 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mMovieAdapter = new MovieAdapter(mMoviesList, this);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
 
+        // Set SQLite DB
+        MovieDBHelper dbHelper = new MovieDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
+
+        // Restore the previous criteria
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mSortCriteria = prefs.getInt(STATE_SORT_CRITERIA, SORT_POPULARITY);
+
         fetchMovies();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Save the current criteria
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putInt(STATE_SORT_CRITERIA, mSortCriteria);
+        edit.commit();
     }
 
     private void fetchMovies() {
         URL url;
-        if (mSortByPopularity) {
+        if (mSortCriteria == SORT_POPULARITY) {
             url = NetworkUtils.buildPopularMoviesQuery(this);
+            new TMDBQueryTask().execute(url);
         }
-        else {
+        else if (mSortCriteria == SORT_BEST_RATED) {
             url = NetworkUtils.buildTopRatedMoviesQuery(this);
+            new TMDBQueryTask().execute(url);
         }
-
-        new TMDBQueryTask().execute(url);
+        else if (mSortCriteria == SORT_FAVORITES) {
+            getFavoriteMovies();
+        }
     }
 
     @Override
@@ -129,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
                         String title = movieResult.getString("title");
                         String posterPath = NetworkUtils.getTmdbPosterBaseUrl() + movieResult.getString("poster_path");
-                        String backdropPath = NetworkUtils.getTmdbPosterBaseUrl() + movieResult.getString("backdrop_path");
                         String overview = movieResult.getString("overview");
                         double rating = movieResult.getDouble("vote_average");
                         int voteCount = movieResult.getInt("vote_count");
@@ -139,11 +172,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                                 id,
                                 title,
                                 Uri.parse(posterPath),
-                                Uri.parse(backdropPath),
                                 overview,
                                 rating,
                                 voteCount,
-                                releaseDate);
+                                releaseDate,
+                                false);         // Do not mark it as favorite
 
                         mMoviesList.add(movie);
                     }
@@ -171,20 +204,67 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         switch (itemId) {
             case R.id.action_sort_popularity:
-                mSortByPopularity = true;
+                mSortCriteria = SORT_POPULARITY;
                 fetchMovies();
                 return true;
 
             case R.id.action_sort_best_rated:
-                mSortByPopularity = false;
+                mSortCriteria = SORT_BEST_RATED;
                 fetchMovies();
                 return true;
 
             case R.id.action_show_favorites:
-                Toast.makeText(MainActivity.this, "TODO: Favorites not implemented yet", Toast.LENGTH_SHORT).show();
+                mSortCriteria = SORT_FAVORITES;
+                fetchMovies();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getFavoriteMovies() {
+
+        // Get all movies sorted by title
+        Cursor cursor = mDb.query(
+                MovieContract.MovieEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                MovieContract.MovieEntry.COLUMN_TMDB_ID,    // Show possible duplicated entries only once
+                null,
+                MovieContract.MovieEntry.COLUMN_TITLE
+        );
+
+        mMoviesList.clear();
+        cursor.moveToFirst();
+
+        // Iterate for all elements retrieved from the DB and add them to the list of movies
+        while (!cursor.isAfterLast()) {
+
+            String id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TMDB_ID));
+
+            String title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+            String posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_COVER_URI));
+            String overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW));
+            double rating = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
+            int voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_COUNT));
+            String releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+
+            PopularMovie movie = new PopularMovie(
+                    id,
+                    title,
+                    Uri.parse(posterPath),
+                    overview,
+                    rating,
+                    voteCount,
+                    releaseDate,
+                    true);         // Mark it as favorite
+
+            mMoviesList.add(movie);
+
+            cursor.moveToNext();
+        }
+
+        mMovieAdapter.notifyDataSetChanged();
     }
 }

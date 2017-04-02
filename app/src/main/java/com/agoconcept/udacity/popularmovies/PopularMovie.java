@@ -11,7 +11,6 @@ public class PopularMovie implements Parcelable {
     private String mId;
     private String mTitle;
     private Uri mCoverUri;
-    private Uri mBackdropUri;
     private String mOverview;
     private double mRating;
     private int mVoteCount;
@@ -21,12 +20,13 @@ public class PopularMovie implements Parcelable {
     private ArrayList<String> mTrailers;
     private ArrayList<String> mReviews;
 
-    public PopularMovie(String id, String title, Uri coverUri, Uri backdropUri, String overview,
-                        double rating, int voteCount, String releaseDate) {
+    private Boolean mIsFavorite;
+
+    public PopularMovie(String id, String title, Uri coverUri, String overview,
+                        double rating, int voteCount, String releaseDate, Boolean isFavorite) {
         mId = id;
         mTitle = title;
         mCoverUri = coverUri;
-        mBackdropUri = backdropUri;
         mOverview = overview;
         mRating = rating;
         mVoteCount = voteCount;
@@ -34,13 +34,14 @@ public class PopularMovie implements Parcelable {
 
         mTrailers = new ArrayList<>();
         mReviews = new ArrayList<>();
+
+        mIsFavorite = isFavorite;
     }
 
     protected PopularMovie(Parcel in) {
         mId = in.readString();
         mTitle = in.readString();
         mCoverUri = in.readParcelable(Uri.class.getClassLoader());
-        mBackdropUri = in.readParcelable(Uri.class.getClassLoader());
         mOverview = in.readString();
         mRating = in.readDouble();
         mVoteCount = in.readInt();
@@ -48,6 +49,8 @@ public class PopularMovie implements Parcelable {
 
         mTrailers = in.createStringArrayList();
         mReviews = in.createStringArrayList();
+
+        mIsFavorite = in.readByte() == 1;
     }
 
     public static final Creator<PopularMovie> CREATOR = new Creator<PopularMovie>() {
@@ -74,10 +77,6 @@ public class PopularMovie implements Parcelable {
         return mCoverUri;
     }
 
-    public Uri getBackdropUri() {
-        return mBackdropUri;
-    }
-
     public String getOverview() { return mOverview; }
 
     public double getRating() { return mRating; }
@@ -90,6 +89,9 @@ public class PopularMovie implements Parcelable {
 
     public ArrayList<String> getReviews() { return mReviews; }
 
+    public Boolean getIsFavorite() { return mIsFavorite; }
+    public void setIsFavorite(Boolean isFavorite) { mIsFavorite = isFavorite; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -100,7 +102,6 @@ public class PopularMovie implements Parcelable {
         parcel.writeString(mId);
         parcel.writeString(mTitle);
         parcel.writeParcelable(mCoverUri, i);
-        parcel.writeParcelable(mBackdropUri, i);
         parcel.writeString(mOverview);
         parcel.writeDouble(mRating);
         parcel.writeInt(mVoteCount);
@@ -108,5 +109,10 @@ public class PopularMovie implements Parcelable {
 
         parcel.writeStringList(mTrailers);
         parcel.writeStringList(mReviews);
+
+        if (mIsFavorite)
+            parcel.writeByte((byte) 1);
+        else
+            parcel.writeByte((byte) 0);
     }
 }
