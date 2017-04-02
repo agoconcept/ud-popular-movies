@@ -236,10 +236,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         );
 
         mMoviesList.clear();
-        cursor.moveToFirst();
 
         // Iterate for all elements retrieved from the DB and add them to the list of movies
-        while (!cursor.isAfterLast()) {
+        while (cursor.moveToNext()) {
 
             String id = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TMDB_ID));
 
@@ -261,9 +260,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
                     true);         // Mark it as favorite
 
             mMoviesList.add(movie);
-
-            cursor.moveToNext();
         }
+
+        cursor.close();
 
         mMovieAdapter.notifyDataSetChanged();
     }
