@@ -1,7 +1,9 @@
-package com.agoconcept.udacity.popularmovies;
+package com.agoconcept.udacity.popularmovies.util;
 
 import android.content.Context;
 import android.net.Uri;
+
+import com.agoconcept.udacity.popularmovies.R;
 
 import java.io.IOException;
 import java.io.InputStream;

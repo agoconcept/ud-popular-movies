@@ -21,6 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.agoconcept.udacity.popularmovies.adapter.ReviewAdapter;
+import com.agoconcept.udacity.popularmovies.adapter.TrailerAdapter;
+import com.agoconcept.udacity.popularmovies.data.MovieContract;
+import com.agoconcept.udacity.popularmovies.data.MovieDBHelper;
+import com.agoconcept.udacity.popularmovies.data.PopularMovie;
+import com.agoconcept.udacity.popularmovies.util.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;

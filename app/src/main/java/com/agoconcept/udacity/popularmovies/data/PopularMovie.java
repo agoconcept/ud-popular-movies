@@ -1,4 +1,4 @@
-package com.agoconcept.udacity.popularmovies;
+package com.agoconcept.udacity.popularmovies.data;
 
 import android.net.Uri;
 import android.os.Parcel;

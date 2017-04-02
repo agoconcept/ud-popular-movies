@@ -1,4 +1,4 @@
-package com.agoconcept.udacity.popularmovies;
+package com.agoconcept.udacity.popularmovies.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.agoconcept.udacity.popularmovies.util.NetworkUtils;
+import com.agoconcept.udacity.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
