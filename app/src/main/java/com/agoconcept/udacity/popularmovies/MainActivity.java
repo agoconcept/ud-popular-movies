@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -46,8 +45,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     private ArrayList<PopularMovie> mMoviesList;
 
-    private SQLiteDatabase mDb;
-
     static final String STATE_SORT_CRITERIA = "SORT_CRITERIA";
 
     //  Not using an enum to facilitate storing it in a SharedPreferences
@@ -78,10 +75,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mMovieAdapter = new MovieAdapter(mMoviesList, this);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
 
-        // Set SQLite DB
-        MovieDBHelper dbHelper = new MovieDBHelper(this);
-        mDb = dbHelper.getWritableDatabase();
-
         // Restore the previous criteria
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mSortCriteria = prefs.getInt(STATE_SORT_CRITERIA, SORT_POPULARITY);
@@ -97,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor edit = prefs.edit();
         edit.putInt(STATE_SORT_CRITERIA, mSortCriteria);
-        edit.commit();
+        edit.apply();
     }
 
     private void fetchMovies() {
@@ -230,16 +223,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     private void getFavoriteMovies() {
 
-        // Get all movies sorted by title
-        Cursor cursor = mDb.query(
-                MovieContract.MovieEntry.TABLE_NAME,
+        Cursor cursor = getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
                 null,
                 null,
                 null,
-                MovieContract.MovieEntry.COLUMN_TMDB_ID,    // Show possible duplicated entries only once
-                null,
-                MovieContract.MovieEntry.COLUMN_TITLE
-        );
+                MovieContract.MovieEntry.COLUMN_TITLE);
 
         mMoviesList.clear();
 

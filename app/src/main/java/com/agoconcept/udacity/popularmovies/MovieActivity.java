@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 import com.agoconcept.udacity.popularmovies.adapter.ReviewAdapter;
 import com.agoconcept.udacity.popularmovies.adapter.TrailerAdapter;
 import com.agoconcept.udacity.popularmovies.data.MovieContract;
-import com.agoconcept.udacity.popularmovies.data.MovieDBHelper;
 import com.agoconcept.udacity.popularmovies.data.PopularMovie;
 import com.agoconcept.udacity.popularmovies.util.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -65,8 +63,6 @@ public class MovieActivity
 
     private PopularMovie mMovie;
 
-    private SQLiteDatabase mDb;
-
     private Menu mMenu;
 
     @Override
@@ -77,10 +73,6 @@ public class MovieActivity
 
         // This is to enable scrolling for long titles
         mTitleTextView.setMovementMethod(new ScrollingMovementMethod());
-
-        // Set SQLite DB
-        MovieDBHelper dbHelper = new MovieDBHelper(this);
-        mDb = dbHelper.getWritableDatabase();
 
         Intent intent = getIntent();
 
@@ -291,7 +283,7 @@ public class MovieActivity
                 mMovie.setIsFavorite(!mMovie.getIsFavorite());
                 setFavoriteIcon();
 
-                // Update movie in SQLite
+                // Update movie
                 if (mMovie.getIsFavorite())
                     addToFavoriteMovies();
                 else
@@ -303,7 +295,7 @@ public class MovieActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private long addToFavoriteMovies() {
+    private void addToFavoriteMovies() {
         ContentValues cv = new ContentValues();
 
         cv.put(MovieContract.MovieEntry.COLUMN_TMDB_ID, mMovie.getId());
@@ -315,18 +307,19 @@ public class MovieActivity
         cv.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, mMovie.getVoteCount());
         cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
 
-        long rowId = mDb.insert(MovieContract.MovieEntry.TABLE_NAME, null, cv);
+        Uri uri = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
 
-        if (rowId != -1)
+        if (uri != null)
             Toast.makeText(MovieActivity.this, getString(R.string.movie_saved_as_favorite), Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(MovieActivity.this, getString(R.string.movie_error_saving_favorite), Toast.LENGTH_SHORT).show();
-
-        return rowId;
     }
 
     private void removeFromFavoriteMovies() {
-        int rowsDeleted = mDb.delete(MovieContract.MovieEntry.TABLE_NAME, MovieContract.MovieEntry.COLUMN_TMDB_ID + "=" + mMovie.getId(), null);
+
+        String whereClause = MovieContract.MovieEntry.COLUMN_TMDB_ID + " = ?";
+        String whereArgs[] = {mMovie.getId()};
+        int rowsDeleted = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, whereClause, whereArgs);
 
         if (rowsDeleted > 0)
             Toast.makeText(MovieActivity.this, getString(R.string.movie_deleted_as_favorite), Toast.LENGTH_SHORT).show();
