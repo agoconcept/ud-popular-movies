@@ -120,11 +120,11 @@ public class MovieContentProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
 
-        int returnValue;
+        int numberOfRowsDeleted;
 
         switch (match) {
             case MOVIES:
-                returnValue = db.delete(
+                numberOfRowsDeleted = db.delete(
                         MovieContract.MovieEntry.TABLE_NAME,
                         whereClause,
                         whereArgs);
@@ -133,9 +133,11 @@ public class MovieContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (numberOfRowsDeleted > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
 
-        return returnValue;
+        return numberOfRowsDeleted;
     }
 
     @Override
