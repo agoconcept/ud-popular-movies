@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private ArrayList<PopularMovie> mMoviesList;
 
     static final String STATE_SORT_CRITERIA = "SORT_CRITERIA";
+    static final String STATE_SCROLL_INDEX = "SCROLL_INDEX";
+    static final String STATE_SCROLL_TOP = "SCROLL_TOP";
 
     //  Not using an enum to facilitate storing it in a SharedPreferences
     static final int SORT_POPULARITY = 0;
@@ -74,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         mMovieAdapter = new MovieAdapter(mMoviesList, this);
         mMainLayoutRecyclerView.setAdapter(mMovieAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // Restore the previous criteria
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,14 +90,35 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
 
-        // Save the current criteria
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor edit = prefs.edit();
+
+        // Save the current criteria
         edit.putInt(STATE_SORT_CRITERIA, mSortCriteria);
+
+        // Save the current scroll position
+        // (adapted from http://stackoverflow.com/a/35287828)
+        int index = mGridLayoutManager.findFirstVisibleItemPosition();
+        View v = mMainLayoutRecyclerView.getChildAt(0);
+        int top = (v == null) ? 0 : (v.getTop() - mMainLayoutRecyclerView.getPaddingTop());
+        edit.putInt(STATE_SCROLL_INDEX, index);
+        edit.putInt(STATE_SCROLL_TOP, top);
+
         edit.apply();
+    }
+
+    private void setScrollPosition() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Restore the previous scroll
+        int index = prefs.getInt(STATE_SCROLL_INDEX, -1);
+        int top = prefs.getInt(STATE_SCROLL_TOP, -1);
+        if (index != -1) {
+            mGridLayoutManager.scrollToPositionWithOffset(index, top);
+        }
     }
 
     private void fetchMovies() {
@@ -187,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
             } else {
                 Toast.makeText(MainActivity.this, getString(R.string.no_response), Toast.LENGTH_SHORT).show();
             }
+            setScrollPosition();
         }
     }
 
@@ -260,5 +289,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         cursor.close();
 
         mMovieAdapter.notifyDataSetChanged();
+
+        setScrollPosition();
     }
 }
