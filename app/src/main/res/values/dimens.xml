@@ -20,4 +20,6 @@
 
     <dimen name="movie_trailer_height">100dp</dimen>
 
+    <dimen name="progress_bar_size">42dp</dimen>
+
 </resources>
