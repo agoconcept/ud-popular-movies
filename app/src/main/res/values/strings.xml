@@ -16,6 +16,7 @@
     <string name="trailer">Trailer</string>
     <string name="trailers">Trailers</string>
     <string name="review">Review</string>
+    <string name="reviews">Reviews</string>
 
     <string name="movie_saved_as_favorite">Movie saved as favorite</string>
     <string name="movie_error_saving_favorite">Error when saving movie as favorite</string>

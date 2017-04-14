@@ -36,7 +36,7 @@
         <ImageView
             android:id="@+id/iv_item_movie_cover"
             android:layout_width="wrap_content"
-            android:layout_height="256dp"
+            android:layout_height="128dp"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -51,8 +51,8 @@
             android:id="@+id/tv_movie_release_date_title"
             style="@style/SectionTitle"
             android:text="@string/release_date"
-            app:layout_constraintTop_toTopOf="@+id/iv_item_movie_cover"
-            app:layout_constraintLeft_toRightOf="@+id/iv_item_movie_cover" />
+            app:layout_constraintLeft_toRightOf="@+id/iv_item_movie_cover"
+            app:layout_constraintTop_toTopOf="@+id/iv_item_movie_cover" />
 
         <TextView
             android:id="@+id/tv_movie_release_date"
@@ -61,15 +61,15 @@
             android:textSize="@dimen/movie_release_date_text_size"
             android:textStyle="bold"
             tools:text="2017"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_release_date_title"
-            app:layout_constraintLeft_toRightOf="@+id/iv_item_movie_cover" />
+            app:layout_constraintLeft_toLeftOf="@+id/tv_movie_release_date_title"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_movie_user_rating" />
 
         <TextView
             android:id="@+id/tv_movie_user_rating_title"
             style="@style/SectionTitle"
             android:text="@string/user_rating"
-            app:layout_constraintLeft_toRightOf="@+id/iv_item_movie_cover"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_release_date" />
+            app:layout_constraintLeft_toRightOf="@+id/tv_movie_release_date_title"
+            app:layout_constraintTop_toTopOf="@+id/iv_item_movie_cover" />
 
         <TextView
             android:id="@+id/tv_movie_user_rating"
@@ -79,7 +79,7 @@
             android:textStyle="bold"
             tools:text="7.7/10"
             app:layout_constraintTop_toBottomOf="@+id/tv_movie_user_rating_title"
-            app:layout_constraintLeft_toRightOf="@+id/iv_item_movie_cover" />
+            app:layout_constraintLeft_toLeftOf="@+id/tv_movie_user_rating_title" />
 
         <!-- Overview -->
 
