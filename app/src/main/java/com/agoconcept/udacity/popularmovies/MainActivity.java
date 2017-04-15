@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.agoconcept.udacity.popularmovies.adapter.MovieAdapter;
 import com.agoconcept.udacity.popularmovies.data.MovieContract;
-import com.agoconcept.udacity.popularmovies.data.MovieDBHelper;
 import com.agoconcept.udacity.popularmovies.data.PopularMovie;
 import com.agoconcept.udacity.popularmovies.util.NetworkUtils;
 
